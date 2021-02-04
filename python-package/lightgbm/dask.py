@@ -608,7 +608,16 @@ class DaskLGBMClassifier(LGBMClassifier, _DaskLGBMModel):
             **kwargs
         )
 
-    fit.__doc__ = LGBMClassifier.fit.__doc__
+    _base_doc = LGBMClassifier.fit.__doc__
+    _before_X, _X, _after_X = _base_doc.partition('X :')
+    with open("/Users/jlamb/repos/LightGBM/whatever.txt", "w") as f:
+        f.write(_after_X)
+    fit.__doc__ = (
+        _before_X
+        + _X + ' Dask DataFrame or Dask Array\n'
+        + ' ' * 12 + 'Input feature matrix.\n'
+        + _after_X
+    )
 
     def predict(self, X: _DaskMatrixLike, **kwargs: Any) -> dask_Array:
         """Docstring is inherited from the lightgbm.LGBMClassifier.predict."""
